@@ -8,8 +8,6 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-
-
 public class Window extends Application {
 
     @Override
@@ -17,7 +15,6 @@ public class Window extends Application {
         stage.setTitle("Circe Desktop");
         BorderPane root = new BorderPane();
         Scene scene = new Scene(root, 800, 600);
-
         MenuBar menuBar = new MenuBar();
         Menu menuFile = new Menu("ファイル");
             MenuItem itemCanvas = new MenuItem("新規作成");
@@ -76,13 +73,10 @@ public class Window extends Application {
             menuTool.getItems().addAll(itemPencil,itemEraser,itemScal,
             itemFinger,itemNuno,itemPastel,itemChork,itemPen,itemHude,
             itemAir,spoit);
-        Menu menuConfig = new Menu("設定");
-        Menu menuWindow = new Menu("ウィンドウ");
-        Menu menuHelp = new Menu("ヘルプ");
+
 
         menuBar.getMenus().addAll(menuFile, menuEdit, 
-                menuSelect, menuDisplay, menuTool,
-                 menuConfig, menuWindow, menuHelp);
+                menuSelect, menuDisplay, menuTool);
 
         root.setTop(menuBar);
 
