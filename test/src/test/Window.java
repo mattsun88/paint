@@ -21,6 +21,8 @@ public class Window extends Application {
         Scene scene = new Scene(root, 800, 600,Color.WHITE);
         final Canvas canvas = new Canvas(800,600);
         GraphicsContext gc = canvas.getGraphicsContext2D();
+
+        //こっからメニューバーの設定
         MenuBar menuBar = new MenuBar();
         Menu menuFile = new Menu("ファイル");
             MenuItem itemCanvas = new MenuItem("新規作成");
@@ -67,15 +69,20 @@ public class Window extends Application {
 
         menuBar.getMenus().addAll(menuFile, menuEdit,
                 menuSelect, menuDisplay, menuTool);
+        //メニューバー設定ここまで
 
+        //メニューバーとキャンバスを画面に
         root.setTop(menuBar);
         root.setCenter(canvas);
         stage.setScene(scene);
         stage.show();
+
+        //ペンの色は黒に
 		gc.setStroke(Color.BLACK);
-        //scene.setOnMouseClicked(e ->		gc.strokeLine(50, 100, 350, 200));
+
+		//イベント検出
         scene.setOnMouseClicked(event -> paint(event,gc));
-        scene.setOnMouseDragged(event ->  paint(event,gc));
+        scene.setOnMouseDragged(event -> paint(event,gc));
     }
 
 	public void paint(MouseEvent event,GraphicsContext gc){
