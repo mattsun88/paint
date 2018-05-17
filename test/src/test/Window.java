@@ -77,12 +77,13 @@ public class Window extends Application {
         stage.setScene(scene);
         stage.show();
 
-        //ペンの色は黒に
+        //描画は黒に
 		gc.setStroke(Color.BLACK);
 
-		//イベント検出
+		//イベント検出と動作
         scene.setOnMouseClicked(event -> paint(event,gc));
         scene.setOnMouseDragged(event -> paint(event,gc));
+        scene.setOnMouseReleased(event -> paint(event,gc));
     }
 
 	public void paint(MouseEvent event,GraphicsContext gc){
