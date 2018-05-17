@@ -16,7 +16,7 @@ public class Window extends Application {
 
     @Override
     public void start(Stage stage) {
-        stage.setTitle("Circe Desktop");
+        stage.setTitle("ペイント");
         BorderPane root = new BorderPane();
         Scene scene = new Scene(root, 800, 600,Color.WHITE);
         final Canvas canvas = new Canvas(800,600);
@@ -40,16 +40,10 @@ public class Window extends Application {
             MenuItem itemCopy = new MenuItem("コピー");
             MenuItem itemPaste = new MenuItem("貼り付け");
             MenuItem itemTrim = new MenuItem("トリミング");
-            MenuItem itemLeftTurn = new MenuItem("左回転");
-            MenuItem itemRightTurn = new MenuItem("右回転");
-            MenuItem itemReverse = new MenuItem("左右反転");
-            MenuItem itemCanvasSize = new MenuItem("キャンバスサイズの変更");
-            MenuItem itemGroup = new MenuItem("グループ化");
              menuEdit.getItems().addAll(
                     itemUndo,new SeparatorMenuItem(),
                     itemCut,itemCopy,itemPaste,itemTrim,new SeparatorMenuItem(),
-                    itemLeftTurn,itemRightTurn,itemReverse,new SeparatorMenuItem(),
-                    itemCanvasSize,itemGroup);
+                    new SeparatorMenuItem());
 
         Menu menuSelect = new Menu("選択範囲");
             MenuItem itemSelectAll = new MenuItem("全て選択");
@@ -66,22 +60,12 @@ public class Window extends Application {
             menuDisplay.getItems().addAll(DisplayZoom,DisplayZoomOut);
         Menu menuTool = new Menu("ツール");
             MenuItem itemPencil = new MenuItem("鉛筆");
-            MenuItem itemEraser = new MenuItem("消しゴム");
-            MenuItem itemScal = new MenuItem("定規");
-            MenuItem itemFinger = new MenuItem("指");
-            MenuItem itemNuno = new MenuItem("布");
-            MenuItem itemPastel = new MenuItem("パステル");
-            MenuItem itemChork = new MenuItem("チョーク");
-            MenuItem itemPen = new MenuItem("ペン");
-            MenuItem itemHude = new MenuItem("筆");
-            MenuItem itemAir = new MenuItem("エアブラシ");
-            MenuItem spoit = new MenuItem("スポイト");
-            menuTool.getItems().addAll(itemPencil,itemEraser,itemScal,
-            itemFinger,itemNuno,itemPastel,itemChork,itemPen,itemHude,
-            itemAir,spoit);
+            MenuItem itemStrait = new MenuItem("直線");
+
+            menuTool.getItems().addAll(itemPencil,itemStrait);
 
 
-        menuBar.getMenus().addAll(menuFile, menuEdit, 
+        menuBar.getMenus().addAll(menuFile, menuEdit,
                 menuSelect, menuDisplay, menuTool);
 
         root.setTop(menuBar);
@@ -93,7 +77,7 @@ public class Window extends Application {
         scene.setOnMouseClicked(event -> paint(event,gc));
         scene.setOnMouseDragged(event ->  paint(event,gc));
     }
-    
+
 	public void paint(MouseEvent event,GraphicsContext gc){
 		int x = (int)event.getX();
 		int y = (int)event.getY();
