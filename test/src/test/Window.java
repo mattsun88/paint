@@ -2,11 +2,15 @@ package test;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 public class Window extends Application {
 
@@ -14,7 +18,9 @@ public class Window extends Application {
     public void start(Stage stage) {
         stage.setTitle("Circe Desktop");
         BorderPane root = new BorderPane();
-        Scene scene = new Scene(root, 800, 600);
+        Scene scene = new Scene(root, 800, 600,Color.WHITE);
+        final Canvas canvas = new Canvas(800,600);
+        GraphicsContext gc = canvas.getGraphicsContext2D();
         MenuBar menuBar = new MenuBar();
         Menu menuFile = new Menu("ファイル");
             MenuItem itemCanvas = new MenuItem("新規作成");
@@ -79,11 +85,21 @@ public class Window extends Application {
                 menuSelect, menuDisplay, menuTool);
 
         root.setTop(menuBar);
-
+        root.setCenter(canvas);
         stage.setScene(scene);
         stage.show();
-
+		gc.setStroke(Color.BLACK);
+        //scene.setOnMouseClicked(e ->		gc.strokeLine(50, 100, 350, 200));
+        scene.setOnMouseClicked(event -> paint(event,gc));
+        scene.setOnMouseDragged(event ->  paint(event,gc));
     }
+    
+	public void paint(MouseEvent event,GraphicsContext gc){
+		int x = (int)event.getX();
+		int y = (int)event.getY();
+		gc.setStroke(Color.BLACK);
+		gc.strokeLine(x,y-25,x,y-25);
+	}
 
     public static void main(String[] args) {
         launch(args);
