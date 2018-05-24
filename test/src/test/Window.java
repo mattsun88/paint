@@ -1,6 +1,7 @@
 package test;
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -11,6 +12,9 @@ import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.LineTo;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
 import javafx.stage.Stage;
 public class Window extends Application {
 
@@ -21,7 +25,8 @@ public class Window extends Application {
         Scene scene = new Scene(root, 800, 600,Color.WHITE);
         final Canvas canvas = new Canvas(800,600);
         GraphicsContext gc = canvas.getGraphicsContext2D();
-
+        Path path = new Path();
+       // Path lastpath= new Path();
         //こっからメニューバーの設定
         MenuBar menuBar = new MenuBar();
         Menu menuFile = new Menu("ファイル");
@@ -62,6 +67,7 @@ public class Window extends Application {
             menuDisplay.getItems().addAll(DisplayZoom,DisplayZoomOut);
         Menu menuTool = new Menu("ツール");
             MenuItem itemPencil = new MenuItem("鉛筆");
+            itemPencil.addEventHandler( ActionEvent.ACTION , e -> System.out.println( "selected" ));
             MenuItem itemStrait = new MenuItem("直線");
 
             menuTool.getItems().addAll(itemPencil,itemStrait);
@@ -72,18 +78,34 @@ public class Window extends Application {
         //メニューバー設定ここまで
 
         //メニューバーとキャンバスを画面に
-        root.setTop(menuBar);
-        root.setCenter(canvas);
-        stage.setScene(scene);
-        stage.show();
+
 
         //描画は黒に
 		gc.setStroke(Color.BLACK);
 
 		//イベント検出と動作
-        scene.setOnMouseClicked(event -> paint(event,gc));
-        scene.setOnMouseDragged(event -> paint(event,gc));
-        scene.setOnMouseReleased(event -> paint(event,gc));
+        //scene.setOnMouseClicked(event -> paint(event,gc));
+        //scene.setOnMouseDragged(event -> paint(event,gc));
+        //scene.setOnMouseReleased(event -> paint(event,gc));
+
+        scene.setOnMousePressed((event) -> {
+            path.getElements().add(new MoveTo(event.getX(),event.getY()));
+        });
+        scene.setOnMouseDragged((event)->{
+            path.getElements().add(new LineTo(event.getX(),event.getY()));
+        });
+        int i=0;
+        root.setTop(menuBar);
+
+        //root.setCenter(canvas);
+        final Path lastpath=path;
+        //lastpath.setScaleX(3.5);
+        itemStrait.addEventHandler( ActionEvent.ACTION , e ->lastpath.setScaleX(3.5) );
+        root.getChildren().add(path);
+        System.out.println( i++ );
+        stage.setScene(scene);
+        stage.show();
+
     }
 
 	public void paint(MouseEvent event,GraphicsContext gc){
@@ -91,6 +113,10 @@ public class Window extends Application {
 		int y = (int)event.getY();
 		gc.setStroke(Color.BLACK);
 		gc.strokeLine(x,y-25,x,y-25);
+	}
+
+	public void big(ActionEvent event,Path path){
+		path.setScaleX(3.5)	;
 	}
 
     public static void main(String[] args) {
