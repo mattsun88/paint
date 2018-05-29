@@ -15,7 +15,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
+import javafx.scene.transform.Affine;
 import javafx.stage.Stage;
+
 public class Window extends Application {
 
     @Override
@@ -100,7 +102,7 @@ public class Window extends Application {
         //root.setCenter(canvas);
         final Path lastpath=path;
         //lastpath.setScaleX(3.5);
-        itemStrait.addEventHandler( ActionEvent.ACTION , e ->lastpath.setScaleX(3.5) );
+        itemStrait.addEventHandler( ActionEvent.ACTION , e ->big(e,path) );
         root.getChildren().add(path);
         System.out.println( i++ );
         stage.setScene(scene);
@@ -116,7 +118,10 @@ public class Window extends Application {
 	}
 
 	public void big(ActionEvent event,Path path){
-		path.setScaleX(3.5)	;
+		Affine affine = new Affine(1, 0, 0, 0, 1, 0);
+		//Point2D dataA = new Point2D(160, 100);
+		//affine.transform(dataA);
+		path.getTransforms().add(affine);
 	}
 
     public static void main(String[] args) {
