@@ -9,13 +9,13 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.image.PixelWriter;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
-import javafx.scene.transform.Affine;
 import javafx.stage.Stage;
 
 public class Window extends Application {
@@ -102,7 +102,7 @@ public class Window extends Application {
         //root.setCenter(canvas);
         final Path lastpath=path;
         //lastpath.setScaleX(3.5);
-        itemStrait.addEventHandler( ActionEvent.ACTION , e ->big(e,path) );
+        itemStrait.addEventHandler( ActionEvent.ACTION , e ->big(e,gc) );
         root.getChildren().add(path);
         System.out.println( i++ );
         stage.setScene(scene);
@@ -117,11 +117,11 @@ public class Window extends Application {
 		gc.strokeLine(x,y-25,x,y-25);
 	}
 
-	public void big(ActionEvent event,Path path){
-		Affine affine = new Affine(1, 0, 0, 0, 1, 0);
-		//Point2D dataA = new Point2D(160, 100);
-		//affine.transform(dataA);
-		path.getTransforms().add(affine);
+	public void big(ActionEvent event,GraphicsContext gc){
+		//WritableImage   wImg        = new WritableImage( (int) 800 , (int) 600 );
+		PixelWriter reader = gc.getPixelWriter();
+		//PixelWriter     writer      = wImg.getPixelWriter();
+
 	}
 
     public static void main(String[] args) {
