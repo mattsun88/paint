@@ -1,6 +1,12 @@
 package test;
 
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
 import javafx.application.Application;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -9,7 +15,9 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.image.Image;
 import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
@@ -102,7 +110,7 @@ public class Window extends Application {
         //root.setCenter(canvas);
         final Path lastpath=path;
         //lastpath.setScaleX(3.5);
-        itemStrait.addEventHandler( ActionEvent.ACTION , e ->big(e,gc) );
+        itemStrait.addEventHandler( ActionEvent.ACTION , e ->big(e,gc,canvas) );
         root.getChildren().add(path);
         System.out.println( i++ );
         stage.setScene(scene);
@@ -117,11 +125,20 @@ public class Window extends Application {
 		gc.strokeLine(x,y-25,x,y-25);
 	}
 
-	public void big(ActionEvent event,GraphicsContext gc){
+	public void big(ActionEvent event,GraphicsContext gc,Canvas canvas){
 		//WritableImage   wImg        = new WritableImage( (int) 800 , (int) 600 );
-		PixelWriter reader = gc.getPixelWriter();
+		PixelWriter writer = gc.getPixelWriter();
 		//PixelWriter     writer      = wImg.getPixelWriter();
-
+		Image image = canvas.snapshot(null, null);
+		WritableImage resizedImage = new WritableImage(image.getPixelReader(),
+		        0, 0, (int) (image.getWidth() / 2), (int) (image.getHeight() / 2));
+	    File f = new File("tes.png");
+	    try {
+			ImageIO.write(SwingFXUtils.fromFXImage(resizedImage, null), "png", f);
+		} catch (IOException e) {
+			// TODO 自動生成された catch ブロック
+			e.printStackTrace();
+		}
 	}
 
     public static void main(String[] args) {
