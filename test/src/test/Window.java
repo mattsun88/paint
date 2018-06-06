@@ -21,8 +21,6 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.LineTo;
-import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.stage.Stage;
 
@@ -32,9 +30,10 @@ public class Window extends Application {
     public void start(Stage stage) {
         stage.setTitle("ペイント");
         BorderPane root = new BorderPane();
-        Scene scene = new Scene(root, 800, 600,Color.WHITE);
+        Scene scene = new Scene(root, 800, 600);
         final Canvas canvas = new Canvas(800,600);
         GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.setFill(Color.WHITE);
         Path path = new Path();
        // Path lastpath= new Path();
         //こっからメニューバーの設定
@@ -99,15 +98,17 @@ public class Window extends Application {
         //scene.setOnMouseReleased(event -> paint(event,gc));
 
         scene.setOnMousePressed((event) -> {
-            path.getElements().add(new MoveTo(event.getX(),event.getY()));
+            //path.getElements().add(new MoveTo(event.getX(),event.getY()));
+        	paint(event,gc);
         });
         scene.setOnMouseDragged((event)->{
-            path.getElements().add(new LineTo(event.getX(),event.getY()));
+            //path.getElements().add(new LineTo(event.getX(),event.getY()));
+        	paint(event,gc);
         });
         int i=0;
         root.setTop(menuBar);
 
-        //root.setCenter(canvas);
+        root.setCenter(canvas);
         final Path lastpath=path;
         //lastpath.setScaleX(3.5);
         itemStrait.addEventHandler( ActionEvent.ACTION , e ->big(e,gc,canvas) );
@@ -132,6 +133,7 @@ public class Window extends Application {
 		Image image = canvas.snapshot(null, null);
 		WritableImage resizedImage = new WritableImage(image.getPixelReader(),
 		        0, 0, (int) (image.getWidth() / 2), (int) (image.getHeight() / 2));
+		gc.drawImage(image, 400, 400);
 	    File f = new File("tes.png");
 	    try {
 			ImageIO.write(SwingFXUtils.fromFXImage(resizedImage, null), "png", f);
