@@ -1,12 +1,6 @@
 package test;
 
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
-
 import javafx.application.Application;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -37,14 +31,21 @@ public class Window extends Application {
         final Canvas canvas2 = new Canvas(800,600);
         GraphicsContext gc = canvas.getGraphicsContext2D();
         GraphicsContext gc2 = canvas2.getGraphicsContext2D();
-
+        gc.setGlobalAlpha(1.0);
         Pane pane = new Pane();
         pane.getChildren().add(canvas2);
         pane.getChildren().add(canvas);
-        //gc.setFill(Color.WHITE);
+        Image image = canvas.snapshot(null, null);
+        WritableImage wImage = new WritableImage(image.getPixelReader(),
+		        0,0,800,600);
+		PixelWriter pw = wImage.getPixelWriter();
 
-        //int mode=0;
-       // Path lastpath= new Path();
+		for(int i=0;i<800;i++) {
+			for(int j=0;j<600;j++) {
+				pw.setColor(i, j, Color.WHITE);
+			}
+		}
+		gc.drawImage(wImage, 0, 0);
         //こっからメニューバーの設定
         MenuBar menuBar = new MenuBar();
         Menu menuFile = new Menu("ファイル");
@@ -122,9 +123,10 @@ public class Window extends Application {
         		paint(event,gc);
         	}
         	else if(mode==2) {
+        		canvas2.toFront();
         		square(event,gc2);
         	}
-        	else {
+        	else if(mode==1){
         		canvas2.toFront();
         		line2(event,gc2);
         	}
@@ -139,8 +141,10 @@ public class Window extends Application {
         		gc.beginPath();//マウス離すと始点リセット
         	}
         	else if(mode==2) {
-        		setNodes(event,pane);
+        		canvas2.toFront();
+        		setNodes(event,pane,canvas,canvas2,gc,gc2);
         		modechange(4);
+        		//canvas2.toFront();
         	}
 
         });
@@ -186,13 +190,12 @@ public class Window extends Application {
 		gc.strokeLine(x,y1,x1,y1);
 	}
 
-	public void setNodes(MouseEvent event, Pane pane) {
+	public void setNodes(MouseEvent event, Pane pane,Canvas canvas, Canvas canvas2, GraphicsContext gc, GraphicsContext gc2) {
 		int x1 = (int)event.getX();
 		int y1 = (int)event.getY();
+		int origx = x;
+		int origy = y;
 		Circle circle = new Circle(x,y,5);
-		circle.setOnMouseClicked((e) -> {
-			System.out.print("c1");
-		});
 		Circle circle2 = new Circle(x1,y,5);
 		Circle circle3 = new Circle(x,y1,5);
 		Circle circle4 = new Circle(x1,y1,5);
@@ -200,8 +203,34 @@ public class Window extends Application {
 		Circle circle6 = new Circle(x,(y+y1)/2,5);
 		Circle circle7 = new Circle(x1,(y+y1)/2,5);
 		Circle circle8 = new Circle((x+x1)/2,y1,5);
+		circle.setOnMouseClicked((e) -> {
+			System.out.print("c1");
+		});
+        circle.setOnMouseDragged((e)->{
+        		setXY(x1,y1);
+        		square(e,gc2);
+        });
+        circle.setOnMouseReleased((e)->{
+
+        	big(e,gc,canvas,origx,origy,x1,y1,pane);
+        	pane.getChildren().removeAll(circle,circle2,circle3,circle4,circle5,circle6,circle7,circle8);
+        	gc2.clearRect(0, 0, 800, 600);
+        	modechange(0);
+        });
+        circle.toFront();
+
+		circle2.setOnMouseClicked((e) -> {
+			System.out.print("c1");
+		});
+        circle2.setOnMouseDragged((e)->{
+        		setXY(x,y1);
+        		square(e,gc2);
+        });
+        circle2.toFront();
 
 
+
+        pane.getChildren().addAll();
 		pane.getChildren().addAll(circle,circle2,circle3,circle4,circle5,circle6,circle7,circle8);
 	}
 
@@ -209,22 +238,26 @@ public class Window extends Application {
 		x = (int)e.getX();
 		y=(int)e.getY();
 	}
-	public void big(ActionEvent event,GraphicsContext gc,Canvas canvas){
-		WritableImage   wImg        = new WritableImage( (int) 800 , (int) 600 );
-		PixelWriter writer = gc.getPixelWriter();
-		//PixelWriter     writer      = wImg.getPixelWriter();
+	public void setXY(int x1,int y1) {
+		x = x1;
+		y= y1;
+	}
+	public void big(MouseEvent event,GraphicsContext gc,Canvas canvas, int origx, int origy,int X, int Y, Pane pane){
+		int x1 = (int)event.getX();
+		int y1 = (int)event.getY();
 		Image image = canvas.snapshot(null, null);
 		WritableImage resizedImage = new WritableImage(image.getPixelReader(),
-		        0, 0, (int) (image.getWidth() / 2), (int) (image.getHeight() / 2));
-		gc.drawImage(image, 400, 200);
-	    File f = new File("tes.png");
-	    try {
-			ImageIO.write(SwingFXUtils.fromFXImage(resizedImage, null), "png", f);
+		        origx,origy,X-origx,Y-origy);
+		WritableImage voidImage = new WritableImage(X-origx,Y-origy);
+		PixelWriter pw = voidImage.getPixelWriter();
 
-		} catch (IOException e) {
-			// TODO 自動生成された catch ブロック
-			e.printStackTrace();
+		for(int i=0;i<X-origx;i++) {
+			for(int j=0;j<Y-origy;j++) {
+				pw.setColor(i, j, Color.WHITE);
+			}
 		}
+		gc.drawImage(voidImage, origx, origy);
+		gc.drawImage(resizedImage,x1,y1,X-x1,Y-y1);
 	}
     public static void modechange(int i) {
         mode=i;
